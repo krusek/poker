@@ -22,6 +22,18 @@ List<Card> createFlush({Suit suit}) {
   ];
 }
 
+List<Card> createStraightFlush({Suit suit, Ordinal low}) {
+  final index = low.index;
+  final values = Ordinal.values;
+  return [
+    Card(ordinal: values[index + 4], suit: suit),
+    Card(ordinal: values[index + 3], suit: suit),
+    Card(ordinal: values[index + 2], suit: suit),
+    Card(ordinal: values[index + 1], suit: suit),
+    Card(ordinal: values[index], suit: suit),
+  ];
+}
+
 class RoyalFlushMatcher extends Matcher {
   final Suit suit;
   final List<Card> flush;
@@ -35,6 +47,27 @@ class RoyalFlushMatcher extends Matcher {
   bool matches(item, Map matchState) {
     if (item is List<Card>) {
       return equalHands(item, flush);
+    }
+    return false;
+  }
+}
+
+class StraightFlushMatcher extends Matcher {
+  final Suit suit;
+  final Ordinal low;
+  final List<Card> straight;
+  StraightFlushMatcher({this.suit, this.low})
+      : assert(low.index < Ordinal.Ten.index),
+        straight = createStraightFlush(suit: suit, low: low);
+  @override
+  Description describe(Description description) {
+    return description.add('is Straight Flush of suit $suit starting at $low');
+  }
+
+  @override
+  bool matches(item, Map matchState) {
+    if (item is List<Card>) {
+      return equalHands(item, straight);
     }
     return false;
   }

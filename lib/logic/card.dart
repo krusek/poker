@@ -35,6 +35,36 @@ class Card {
 /// A Pair
 /// High Card
 
+List<Card> checkStraightFlush(List<Card> cards) {
+  cards.sort((lhs, rhs) {
+    final suitComp = lhs.suit.index.compareTo(rhs.suit.index);
+    if (suitComp != 0) return suitComp;
+    return rhs.ordinal.index.compareTo(lhs.ordinal.index);
+  });
+  Ordinal _previous(Ordinal ordinal) {
+    if (ordinal == Ordinal.Two) return null;
+    return Ordinal.values[ordinal.index - 1];
+  }
+
+  Suit suit;
+  List<Card> rValue = List();
+  Ordinal expected;
+  for (Card card in cards) {
+    if (card.ordinal == expected && card.suit == suit) {
+      rValue.add(card);
+      if (rValue.length == 5) {
+        return rValue;
+      }
+      expected = _previous(card.ordinal);
+    } else {
+      rValue = [card];
+      suit = card.suit;
+      expected = _previous(card.ordinal);
+    }
+  }
+  return null;
+}
+
 List<Card> checkRoyalFlush(List<Card> cards) {
   cards.sort((lhs, rhs) {
     final suitComp = lhs.suit.index.compareTo(rhs.suit.index);
