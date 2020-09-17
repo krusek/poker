@@ -5,6 +5,8 @@ import 'package:poker/logic/card.dart';
 /// Assumes no cards are duplicated and is
 /// independent of order.
 bool equalHands(List<Card> lhs, List<Card> rhs) {
+  if (lhs == rhs) return true;
+  if (lhs == null || rhs == null) return false;
   if (lhs.length != rhs.length) return false;
   for (Card card in lhs) {
     if (!rhs.contains(card)) return false;
@@ -32,6 +34,20 @@ List<Card> createStraightFlush({Suit suit, Ordinal low}) {
     Card(ordinal: values[index + 1], suit: suit),
     Card(ordinal: values[index], suit: suit),
   ];
+}
+
+class EqualHandsMatcher extends Matcher {
+  final List<Card> hand;
+  EqualHandsMatcher({this.hand});
+  @override
+  Description describe(Description description) {
+    return description.add('cards equal $hand');
+  }
+
+  @override
+  bool matches(item, Map matchState) {
+    return equalHands(item, hand);
+  }
 }
 
 class RoyalFlushMatcher extends Matcher {

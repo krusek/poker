@@ -134,4 +134,67 @@ void main() {
       expect(checkStraightFlush(cards), StraightFlushMatcher(suit: Suit.Spade, low: Ordinal.Five));
     });
   });
+
+  group('4 of a kind', () {
+    test('test 4 of a kind', () {
+      List<Card> four = [
+        Card(ordinal: Ordinal.Queen, suit: Suit.Spade),
+        Card(ordinal: Ordinal.Queen, suit: Suit.Club),
+        Card(ordinal: Ordinal.Queen, suit: Suit.Diamond),
+        Card(ordinal: Ordinal.Queen, suit: Suit.Heart),
+      ];
+      List<Card> cards = List.from(four)..add(Card(ordinal: Ordinal.Eight, suit: Suit.Club));
+      expect(checkFourOfKind(cards), EqualHandsMatcher(hand: four));
+    });
+
+    test('test not 4 of a kind', () {
+      List<Card> four = [
+        Card(ordinal: Ordinal.Queen, suit: Suit.Spade),
+        Card(ordinal: Ordinal.Queen, suit: Suit.Club),
+        Card(ordinal: Ordinal.Jack, suit: Suit.Diamond),
+        Card(ordinal: Ordinal.Queen, suit: Suit.Heart),
+      ];
+      List<Card> cards = List.from(four)..add(Card(ordinal: Ordinal.Eight, suit: Suit.Club));
+      expect(checkFourOfKind(cards), null);
+    });
+  });
+
+  group('2 of a kind', () {
+    test('test 2 of a kind', () {
+      List<Card> pair = [
+        Card(ordinal: Ordinal.Seven, suit: Suit.Club),
+        Card(ordinal: Ordinal.Seven, suit: Suit.Diamond),
+      ];
+      List<Card> cards = List.from(pair)
+        ..add(Card(ordinal: Ordinal.Eight, suit: Suit.Club))
+        ..add(Card(ordinal: Ordinal.Queen, suit: Suit.Spade))
+        ..add(Card(ordinal: Ordinal.Nine, suit: Suit.Heart));
+
+      expect(checkTwoOfKind(cards), EqualHandsMatcher(hand: pair));
+    });
+
+    test('test high 2 of a kind', () {
+      List<Card> pair = [
+        Card(ordinal: Ordinal.Seven, suit: Suit.Club),
+        Card(ordinal: Ordinal.Seven, suit: Suit.Diamond),
+      ];
+      List<Card> cards = List.from(pair)
+        ..add(Card(ordinal: Ordinal.Two, suit: Suit.Club))
+        ..add(Card(ordinal: Ordinal.Two, suit: Suit.Spade))
+        ..add(Card(ordinal: Ordinal.Nine, suit: Suit.Heart));
+
+      expect(checkTwoOfKind(cards), EqualHandsMatcher(hand: pair));
+    });
+
+    test('test not 2 of a kind', () {
+      List<Card> hand = [
+        Card(ordinal: Ordinal.Nine, suit: Suit.Spade),
+        Card(ordinal: Ordinal.Queen, suit: Suit.Club),
+        Card(ordinal: Ordinal.Jack, suit: Suit.Diamond),
+        Card(ordinal: Ordinal.Two, suit: Suit.Heart),
+        Card(ordinal: Ordinal.Eight, suit: Suit.Club),
+      ];
+      expect(checkTwoOfKind(hand), null);
+    });
+  });
 }
