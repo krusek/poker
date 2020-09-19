@@ -147,10 +147,11 @@ List<Card> checkFlush(List<Card> cards) {
   cards.sort(_suitFirstComparison);
 
   if (cards.length < 5) return null;
-  Ordinal ordinal;
+  Suit suit;
   List<Card> rValue = [];
   for (Card card in cards) {
-    if (card.ordinal != ordinal) {
+    if (card.suit != suit) {
+      suit = card.suit;
       rValue = [card];
     } else {
       rValue.add(card);
