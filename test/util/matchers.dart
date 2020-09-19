@@ -88,3 +88,51 @@ class StraightFlushMatcher extends Matcher {
     return false;
   }
 }
+
+class FullHouseMaterch extends Matcher {
+  final Ordinal low;
+  final Ordinal high;
+  FullHouseMaterch({this.high, this.low}) : assert(low.index < high.index);
+
+  @override
+  Description describe(Description description) {
+    return description.add('is Full House with $high on $low');
+  }
+
+  @override
+  bool matches(item, Map matchState) {
+    if (item is List<Card>) {
+      if (item.length != 5) return false;
+
+      Iterable<Card> three = item.where((element) => element.ordinal == high);
+      if (three.length != 3) return false;
+
+      Iterable<Card> two = item.where((element) => element.ordinal == low);
+      if (two.length != 2) return false;
+      return true;
+    }
+    return false;
+  }
+}
+
+class StraightMatcher extends Matcher {
+  final Ordinal low;
+  StraightMatcher({this.low}) : assert(low.index < Ordinal.Ten.index);
+
+  @override
+  Description describe(Description description) {
+    return description.add('is Straight starting at $low');
+  }
+
+  @override
+  bool matches(item, Map matchState) {
+    if (item is List<Card>) {
+      for (int ix in Iterable.generate(5)) {
+        if (item.firstWhere((element) => element.ordinal.index == (this.low.index + ix), orElse: null) == null)
+          return false;
+      }
+      return true;
+    }
+    return false;
+  }
+}

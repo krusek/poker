@@ -100,6 +100,26 @@ List<Card> checkRoyalFlush(List<Card> cards) {
   return null;
 }
 
+List<Card> checkStraight(List<Card> cards) {
+  cards.sort(_ordinalFirstComparison);
+  List<Card> rValue = List();
+  int expected;
+  for (Card card in cards) {
+    if (expected == card.ordinal.index + 1) continue;
+    if (expected == null || expected == card.ordinal.index) {
+      expected = card.ordinal.index - 1;
+      rValue.add(card);
+      if (rValue.length == 5) {
+        return rValue;
+      }
+    } else {
+      expected = card.ordinal.index - 1;
+      rValue = [card];
+    }
+  }
+  return null;
+}
+
 typedef _Checker = List<Card> Function(List<Card>);
 
 List<Card> checkFullHouse(List<Card> cards) {
@@ -117,7 +137,7 @@ List<Card> checkTwoPair(List<Card> cards) {
 List<Card> _checkTwoScenarios(List<Card> cards, _Checker firstCheck, _Checker secondCheck) {
   List<Card> first = firstCheck(cards);
   if (first == null) return null;
-  List<Card> filtered = cards.where((element) => !first.contains(element));
+  List<Card> filtered = cards.where((element) => !first.contains(element)).toList();
   List<Card> second = secondCheck(filtered);
   if (second == null) return null;
   return first + second;

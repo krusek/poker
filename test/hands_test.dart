@@ -135,6 +135,34 @@ void main() {
     });
   });
 
+  group('full house test', () {
+    test('simple full house test', () {
+      List<Card> cards = [
+        Card(ordinal: Ordinal.Eight, suit: Suit.Spade),
+        Card(ordinal: Ordinal.Eight, suit: Suit.Diamond),
+        Card(ordinal: Ordinal.Six, suit: Suit.Spade),
+        Card(ordinal: Ordinal.Six, suit: Suit.Diamond),
+        Card(ordinal: Ordinal.Six, suit: Suit.Heart),
+      ];
+      List<Card> random = List<Card>.from(cards)..shuffle();
+      List<Card> hand = checkFullHouse(random);
+      expect(hand, EqualHandsMatcher(hand: cards));
+    });
+
+    test('smarter full house', () {
+      List<Card> cards = [
+        Card(ordinal: Ordinal.Eight, suit: Suit.Spade),
+        Card(ordinal: Ordinal.Eight, suit: Suit.Diamond),
+        Card(ordinal: Ordinal.Six, suit: Suit.Spade),
+        Card(ordinal: Ordinal.Six, suit: Suit.Diamond),
+        Card(ordinal: Ordinal.Six, suit: Suit.Heart),
+      ];
+      List<Card> hand = List<Card>.from(cards)..add(Card(ordinal: Ordinal.Eight, suit: Suit.Heart));
+      List<Card> fullHouse = checkFullHouse(hand);
+      expect(fullHouse, FullHouseMaterch(low: Ordinal.Six, high: Ordinal.Eight));
+    });
+  });
+
   group('4 of a kind', () {
     test('test 4 of a kind', () {
       List<Card> four = [
